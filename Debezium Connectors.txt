@@ -1,0 +1,55 @@
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{
+"name": "inventory-outbox-connector", 
+"config": {
+  "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+  "tasks.max": "1",
+  "slot.name": "debezium_inventory",
+  "database.hostname": "postgres",
+  "database.port": "5432",
+  "database.user": "postgres",
+  "database.password": "postgres",
+  "database.dbname" : "inventory",
+  "database.server.name": "localhost",
+  "tombstones.on.delete" : "false",
+  "table.whitelist" : "public.outboxevent",
+  "transforms" : "outbox",
+  "transforms.outbox.type" : "io.debezium.transforms.outbox.EventRouter",
+  "transforms.outbox.table.fields.additional.placement" : "aggregateid:envelope:id"}
+}'
+
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{
+"name": "payment-outbox-connector", 
+"config": {
+  "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+  "tasks.max": "1",
+  "slot.name": "debezium_payment",
+  "database.hostname": "postgres",
+  "database.port": "5432",
+  "database.user": "postgres",
+  "database.password": "postgres",
+  "database.dbname" : "payment",
+  "database.server.name": "localhost",
+  "tombstones.on.delete" : "false",
+  "table.whitelist" : "public.outboxevent",
+  "transforms" : "outbox",
+  "transforms.outbox.type" : "io.debezium.transforms.outbox.EventRouter",
+  "transforms.outbox.table.fields.additional.placement" : "aggregateid:envelope:id"}
+}'
+
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{
+"name": "order-outbox-connector", 
+"config": {
+  "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+  "tasks.max": "1",
+  "database.hostname": "postgres",
+  "database.port": "5432",
+  "database.user": "postgres",
+  "database.password": "postgres",
+  "database.dbname" : "order",
+  "database.server.name": "localhost",
+  "tombstones.on.delete" : "false",
+  "table.whitelist" : "public.outboxevent",
+  "transforms" : "outbox",
+  "transforms.outbox.type" : "io.debezium.transforms.outbox.EventRouter",
+  "transforms.outbox.table.fields.additional.placement" : "aggregateid:envelope:id"}
+}'
